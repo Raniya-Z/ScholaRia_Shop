@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 's_inscrire.dart'; // Assure-toi que ce fichier existe
+import 's_inscrire.dart';
 
 class SeConnecter extends StatefulWidget {
-  const SeConnecter({super.key});
+  final String nomComplet;
+
+  const SeConnecter({super.key, required this.nomComplet});
 
   @override
   _SeConnecterState createState() => _SeConnecterState();
@@ -10,21 +12,12 @@ class SeConnecter extends StatefulWidget {
 
 class _SeConnecterState extends State<SeConnecter> {
   final _formKey = GlobalKey<FormState>();
-
-  String email = '';
+String email = '';
   String motDePasse = '';
   bool cacherMotDePasse = true;
-  bool cadreVertValideEmail = false;
-  bool cadreVertValideMotDePasse = false;
-  bool etoileErreurEmail = false;
-  bool etoileErreurMotDePasse = false;
   bool rememberMe = false;
 
   final Color couleurGris = Colors.grey.shade600;
-
-  final RegExp _regexEmail = RegExp(r'^[\w\.\-]+@gmail\.com\$');
-  final RegExp _regexMotDePasse =
-  RegExp(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[_#@]).{6,}\$');
 
   final FocusNode focusEmail = FocusNode();
   final FocusNode focusMotDePasse = FocusNode();
@@ -58,7 +51,7 @@ class _SeConnecterState extends State<SeConnecter> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 25),
 
                 // Email
                 TextFormField(
@@ -66,97 +59,22 @@ class _SeConnecterState extends State<SeConnecter> {
                   cursorColor: couleurGris,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
-                    label: RichText(
-                      text: TextSpan(
-                        text: 'Adresse Email',
-                        style: TextStyle(color: couleurGris, fontSize: 16),
-                        children: etoileErreurEmail
-                            ? [
-                          const TextSpan(
-                            text: ' *',
-                            style: TextStyle(color: Colors.red),
-                          )
-                        ]
-                            : [],
-                      ),
-                    ),
+                    label: Text('Adresse Email', style: TextStyle(color: couleurGris, fontSize: 16)),
                     prefixIcon: Icon(Icons.email, color: couleurGris),
                     filled: true,
                     fillColor: Colors.white,
-                    contentPadding:
-                    const EdgeInsets.symmetric(vertical: 6),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 6),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(
-                        color: cadreVertValideEmail
-                            ? Colors.green
-                            : Colors.grey.shade400,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(
-                        color: cadreVertValideEmail
-                            ? Colors.green
-                            : Colors.grey.shade400,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(
-                        color: cadreVertValideEmail
-                            ? Colors.green
-                            : Colors.grey.shade400,
-                      ),
+                      borderSide: BorderSide(color: Colors.grey.shade400),
                     ),
                   ),
                   onChanged: (val) {
-                    if (val.isNotEmpty && _regexEmail.hasMatch(val)) {
-                      setState(() {
-                        cadreVertValideEmail = true;
-                        etoileErreurEmail = false;
-                      });
-                    } else {
-                      setState(() {
-                        cadreVertValideEmail = false;
-                        etoileErreurEmail = true;
-                      });
-                    }
-                  },
-                  validator: (val) {
-                    if (val == null || val.isEmpty) {
-                      setState(() {
-                        etoileErreurEmail = true;
-                        cadreVertValideEmail = false;
-                      });
-                      return 'Ce champ est obligatoire';
-                    }
-                    if (!_regexEmail.hasMatch(val)) {
-                      setState(() {
-                        etoileErreurEmail = true;
-                        cadreVertValideEmail = false;
-                      });
-                      return 'Email invalide Ex. exemple@gmail.com';
-                    }
                     setState(() {
-                      etoileErreurEmail = false;
-                      cadreVertValideEmail = true;
+                      email = val;
                     });
-                    return null;
                   },
                 ),
-                if (cadreVertValideEmail)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4, right: 12),
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        'Correct',
-                        style:
-                        TextStyle(color: Colors.green, fontSize: 12),
-                      ),
-                    ),
-                  ),
 
                 const SizedBox(height: 16),
 
@@ -166,26 +84,11 @@ class _SeConnecterState extends State<SeConnecter> {
                   cursorColor: couleurGris,
                   obscureText: cacherMotDePasse,
                   decoration: InputDecoration(
-                    label: RichText(
-                      text: TextSpan(
-                        text: 'Mot de passe',
-                        style: TextStyle(color: couleurGris, fontSize: 16),
-                        children: etoileErreurMotDePasse
-                            ? [
-                          const TextSpan(
-                            text: ' *',
-                            style: TextStyle(color: Colors.red),
-                          )
-                        ]
-                            : [],
-                      ),
-                    ),
+                    label: Text('Mot de passe', style: TextStyle(color: couleurGris, fontSize: 16)),
                     prefixIcon: Icon(Icons.lock, color: couleurGris),
                     suffixIcon: IconButton(
                       icon: Icon(
-                        cacherMotDePasse
-                            ? Icons.visibility_off
-                            : Icons.visibility,
+                        cacherMotDePasse ? Icons.visibility_off : Icons.visibility,
                         color: couleurGris,
                       ),
                       onPressed: () {
@@ -196,82 +99,20 @@ class _SeConnecterState extends State<SeConnecter> {
                     ),
                     filled: true,
                     fillColor: Colors.white,
-                    contentPadding:
-                    const EdgeInsets.symmetric(vertical: 6),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 6),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(
-                        color: cadreVertValideMotDePasse
-                            ? Colors.green
-                            : Colors.grey.shade400,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(
-                        color: cadreVertValideMotDePasse
-                            ? Colors.green
-                            : Colors.grey.shade400,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(
-                        color: cadreVertValideMotDePasse
-                            ? Colors.green
-                            : Colors.grey.shade400,
-                      ),
+                      borderSide: BorderSide(color: Colors.grey.shade400),
                     ),
                   ),
                   onChanged: (val) {
-                    if (_regexMotDePasse.hasMatch(val)) {
-                      setState(() {
-                        cadreVertValideMotDePasse = true;
-                        etoileErreurMotDePasse = false;
-                      });
-                    } else {
-                      setState(() {
-                        cadreVertValideMotDePasse = false;
-                        etoileErreurMotDePasse = true;
-                      });
-                    }
-                  },
-                  validator: (val) {
-                    if (val == null || val.isEmpty) {
-                      setState(() {
-                        etoileErreurMotDePasse = true;
-                        cadreVertValideMotDePasse = false;
-                      });
-                      return 'Ce champ est obligatoire';
-                    }
-                    if (!_regexMotDePasse.hasMatch(val)) {
-                      setState(() {
-                        etoileErreurMotDePasse = true;
-                        cadreVertValideMotDePasse = false;
-                      });
-                      return 'Min. 6 caractères avec une lettre, un chiffre et un caractère spécial (_, #, @)';
-                    }
                     setState(() {
-                      etoileErreurMotDePasse = false;
-                      cadreVertValideMotDePasse = true;
+                      motDePasse = val;
                     });
-                    return null;
                   },
                 ),
-                if (cadreVertValideMotDePasse)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4, right: 12),
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        'Correct',
-                        style:
-                        TextStyle(color: Colors.green, fontSize: 12),
-                      ),
-                    ),
-                  ),
 
-                const SizedBox(height: 30),
+                const SizedBox(height: 10),
 
                 // Remember Me + Forgot Password
                 Row(
@@ -279,50 +120,66 @@ class _SeConnecterState extends State<SeConnecter> {
                   children: [
                     Row(
                       children: [
-                        Checkbox(
-                          value: rememberMe,
-                          onChanged: (value) {
-                            setState(() {
-                              rememberMe = value ?? false;
-                            });
-                          },
+                        Transform.scale(
+                          scale: 0.8, // taille réduite à 80%
+                          child: Checkbox(
+                            value: rememberMe,
+                            fillColor: MaterialStateProperty.all(Colors.white),
+                            side: MaterialStateBorderSide.resolveWith(
+                                  (states) => BorderSide(
+                                color: Colors.grey.shade800, // gris foncé pour le cadre
+                                width: 2,
+                              ),
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                rememberMe = value ?? false;
+                              });
+                            },
+                          ),
                         ),
-                        Text("Se souvenir de moi",
-                            style: TextStyle(color: couleurGris)),
+                        Text("Se souvenir de moi", style: TextStyle(color: couleurGris)),
                       ],
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        // action mot de passe oublié
+                      },
                       child: const Text(
                         "Mot de passe oublié ?",
-                        style: TextStyle(
-                            color: Color(0xFFE61580),
-                            fontWeight: FontWeight.w500),
+                        style: TextStyle(color: Color(0xFFE61580), fontWeight: FontWeight.w500),
                       ),
                     )
                   ],
                 ),
 
-                const SizedBox(height: 16),
+                const SizedBox(height: 15),
 
                 // Bouton Se connecter
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(0,10),
+                      backgroundColor: const Color(0xFFE61580),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 4),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
                     onPressed: () {
-                      if (_formKey.currentState?.validate() ?? false) {
+                      if (_formKey.currentState!.validate()) {
+                        _formKey.currentState!.save();
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Connexion réussie')),
+                          SnackBar(content: Text('Bienvenue, ${widget.nomComplet}!')),
                         );
                       }
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFE61580),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
+                    child: const Text(
+                      'Se connecter',
+                      style: TextStyle(fontSize: 16, color: Colors.white),
                     ),
-                    child: const Text("Se connecter"),
                   ),
                 ),
 
@@ -331,65 +188,118 @@ class _SeConnecterState extends State<SeConnecter> {
                 // OU
                 Row(
                   children: [
-                    const Expanded(child: Divider(color: Color(0xFFE61580))),
-                    const SizedBox(width: 8),
-                    Text("ou", style: TextStyle(color: couleurGris)),
-                    const SizedBox(width: 8),
-                    const Expanded(child: Divider(color: Color(0xFFE61580))),
+                    Expanded(child: Divider(color: Color(0xFFE61580))),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      child: Text("ou"),
+                    ),
+                    Expanded(child: Divider(color: Color(0xFFE61580))),
                   ],
                 ),
 
                 const SizedBox(height: 16),
 
                 // Google / Facebook
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton.icon(
-                      onPressed: () {},
-                      icon: Image.asset("assets/google.png", height: 20),
-                      label: const Text("Google"),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: Colors.black,
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        side: const BorderSide(color: Colors.grey),
-                      ),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    icon: Image.asset('assets/google.jpeg', height: 20),
+                    label: const Text(
+                      'Continuer avec Google',
+                      style: TextStyle(color: Colors.black),
                     ),
-                    ElevatedButton.icon(
-                      onPressed: () {},
-                      icon: Image.asset("assets/facebook.png", height: 20),
-                      label: const Text("Facebook"),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: Colors.black,
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        side: const BorderSide(color: Colors.grey),
+                    onPressed: () {},
+                  ),
+                ),
+                const SizedBox(height: 10),
+
+                // Facebook
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    icon: Image.asset('assets/facebook.jpeg', height: 20),
+                    label: const Text(
+                      'Continuer avec Facebook',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    onPressed: () {},
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+
+                // Lien vers inscription
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Vous n'avez pas de compte ?",
+                      style: TextStyle(color: Colors.grey.shade600),
+                    ),
+
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const PageInscription()),
+                        );
+                      },
+                      child: const Text(
+                        " S'inscrire",
+                        style: TextStyle(
+                          color: Color(0xFFE61580), // rose
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],
                 ),
 
-                const SizedBox(height: 24),
 
-                GestureDetector(
-                  /*onTap: () {
-                    Navigator.push(
-                      context,
-                     MaterialPageRoute(
-                          builder: (_) => const PageInscription()),
-                    );
-                  },*/
-                  child: const Text(
-                    "Don’t have an account? Register",
-                    style: TextStyle(
-                      color: Color(0xFFE61580),
-                      fontWeight: FontWeight.bold,
-                      decoration: TextDecoration.underline,
-                    ),
+                const SizedBox(height: 20),
+
+                //effacer
+
+
+
+                Positioned(
+                  bottom: 90,
+                  right: 20,
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_forward_ios),
+                    color: Color(0xFFE61580), // flèche rose
+                    iconSize: 30,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const PageAccueil ()
+                        ),
+                      );
+                    },
                   ),
                 ),
-                const SizedBox(height: 20),
+                Positioned(
+                  bottom: 90,
+                  left: 20,
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back_ios), // flèche vers la gauche
+                    color: Color(0xFFE61580), // rose
+                    iconSize: 30,
+                    onPressed: () {
+                      Navigator.pop(context); // revenir à la page précédente
+                    },
+                  ),
+                ),
+
+
+
+
+
+
+
+
+
+
               ],
             ),
           ),

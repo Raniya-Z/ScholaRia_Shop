@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 's_inscrire.dart'; // Assure-toi que ce fichier existe
+import 'package:scholaria_shop_v1/accueil.dart';
+import 's_inscrire.dart';
 
 class SeConnecter extends StatefulWidget {
-  const SeConnecter({super.key});
+  final String nomComplet;
+
+  const SeConnecter({super.key, required this.nomComplet});
 
   @override
   _SeConnecterState createState() => _SeConnecterState();
@@ -10,8 +13,7 @@ class SeConnecter extends StatefulWidget {
 
 class _SeConnecterState extends State<SeConnecter> {
   final _formKey = GlobalKey<FormState>();
-
-  String email = '';
+String email = '';
   String motDePasse = '';
   bool cacherMotDePasse = true;
   bool rememberMe = false;
@@ -50,7 +52,7 @@ class _SeConnecterState extends State<SeConnecter> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 25),
 
                 // Email
                 TextFormField(
@@ -111,7 +113,7 @@ class _SeConnecterState extends State<SeConnecter> {
                   },
                 ),
 
-                const SizedBox(height: 30),
+                const SizedBox(height: 10),
 
                 // Remember Me + Forgot Password
                 Row(
@@ -119,13 +121,23 @@ class _SeConnecterState extends State<SeConnecter> {
                   children: [
                     Row(
                       children: [
-                        Checkbox(
-                          value: rememberMe,
-                          onChanged: (value) {
-                            setState(() {
-                              rememberMe = value ?? false;
-                            });
-                          },
+                        Transform.scale(
+                          scale: 0.8, // taille réduite à 80%
+                          child: Checkbox(
+                            value: rememberMe,
+                            fillColor: MaterialStateProperty.all(Colors.white),
+                            side: MaterialStateBorderSide.resolveWith(
+                                  (states) => BorderSide(
+                                color: Colors.grey.shade800, // gris foncé pour le cadre
+                                width: 2,
+                              ),
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                rememberMe = value ?? false;
+                              });
+                            },
+                          ),
                         ),
                         Text("Se souvenir de moi", style: TextStyle(color: couleurGris)),
                       ],
@@ -142,27 +154,33 @@ class _SeConnecterState extends State<SeConnecter> {
                   ],
                 ),
 
-                const SizedBox(height: 16),
+                const SizedBox(height: 15),
 
                 // Bouton Se connecter
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
-                      // Ici tu peux utiliser email, motDePasse et rememberMe
-                      print('Email: $email');
-                      print('Mot de passe: $motDePasse');
-                      print('Remember Me: $rememberMe');
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Connexion tentée avec $email')),
-                      );
-                    },
                     style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(0,10),
                       backgroundColor: const Color(0xFFE61580),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 4),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
-                    child: const Text("Se connecter"),
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        _formKey.currentState!.save();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Bienvenue, ${widget.nomComplet}!')),
+                        );
+                      }
+                    },
+                    child: const Text(
+                      'Se connecter',
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
                   ),
                 ),
 
@@ -171,66 +189,117 @@ class _SeConnecterState extends State<SeConnecter> {
                 // OU
                 Row(
                   children: [
-                    const Expanded(child: Divider(color: Color(0xFFE61580))),
-                    const SizedBox(width: 8),
-                    Text("ou", style: TextStyle(color: couleurGris)),
-                    const SizedBox(width: 8),
-                    const Expanded(child: Divider(color: Color(0xFFE61580))),
+                    Expanded(child: Divider(color: Color(0xFFE61580))),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      child: Text("ou"),
+                    ),
+                    Expanded(child: Divider(color: Color(0xFFE61580))),
                   ],
                 ),
 
                 const SizedBox(height: 16),
 
                 // Google / Facebook
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton.icon(
-                      onPressed: () {},
-                      icon: Image.asset("assets/google.png", height: 20),
-                      label: const Text("Google"),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: Colors.black,
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        side: const BorderSide(color: Colors.grey),
-                      ),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    icon: Image.asset('assets/google.jpeg', height: 20),
+                    label: const Text(
+                      'Continuer avec Google',
+                      style: TextStyle(color: Colors.black),
                     ),
-                    ElevatedButton.icon(
-                      onPressed: () {},
-                      icon: Image.asset("assets/facebook.png", height: 20),
-                      label: const Text("Facebook"),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: Colors.black,
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        side: const BorderSide(color: Colors.grey),
-                      ),
+                    onPressed: () {},
+                  ),
+                ),
+                const SizedBox(height: 10),
+
+                // Facebook
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    icon: Image.asset('assets/facebook.jpeg', height: 20),
+                    label: const Text(
+                      'Continuer avec Facebook',
+                      style: TextStyle(color: Colors.black),
                     ),
-                  ],
+                    onPressed: () {},
+                  ),
                 ),
 
                 const SizedBox(height: 24),
 
                 // Lien vers inscription
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const PageInscription()),
-                    );
-                  },
-                  child: const Text(
-                    "Don’t have an account? Register",
-                    style: TextStyle(
-                      color: Color(0xFFE61580),
-                      fontWeight: FontWeight.bold,
-                      decoration: TextDecoration.underline,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Vous n'avez pas de compte ?",
+                      style: TextStyle(color: Colors.grey.shade600),
                     ),
+
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const PageInscription()),
+                        );
+                      },
+                      child: const Text(
+                        " S'inscrire",
+                        style: TextStyle(
+                          color: Color(0xFFE61580), // rose
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+
+                const SizedBox(height: 20),
+
+                //effacer
+
+
+
+                Positioned(
+                  bottom: 90,
+                  right: 20,
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_forward_ios),
+                    color: Color(0xFFE61580), // flèche rose
+                    iconSize: 30,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const PageAccueil ()),
+                      );
+                    },
+                  ),
+                ),
+                Positioned(
+                  bottom: 90,
+                  left: 20,
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back_ios), // flèche vers la gauche
+                    color: Color(0xFFE61580), // rose
+                    iconSize: 30,
+                    onPressed: () {
+                      Navigator.pop(context); // revenir à la page précédente
+                    },
                   ),
                 ),
 
-                const SizedBox(height: 20),
+
+
+
+
+
+
+
+
+
               ],
             ),
           ),

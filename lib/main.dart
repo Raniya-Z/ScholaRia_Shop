@@ -33,7 +33,7 @@ class _FirstPageState extends State<FirstPage> {
   void initState() {
     super.initState();
     // Attendre 4 secondes puis naviguer vers IntroPage
-    Timer(const Duration(seconds: 2), () {
+    Timer(const Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const IntroPage()),

@@ -603,7 +603,8 @@ class _PageInscriptionState extends State<PageInscription> {
 
 
 
-                  // effacer apres selement pour passer voir le design facilement
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                  //selement pour passer voir le design facilement
                   Positioned(
                     bottom: 90,
                     right: 20,
@@ -621,7 +622,7 @@ class _PageInscriptionState extends State<PageInscription> {
                   ),
 
                   Positioned(
-                    bottom: 90,
+                    top: 90,
                     left: 20,
                     child: IconButton(
                       icon: const Icon(Icons.arrow_back_ios), // flèche vers la gauche
@@ -633,6 +634,8 @@ class _PageInscriptionState extends State<PageInscription> {
                     ),
                   ),
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 

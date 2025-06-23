@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 's_inscrire.dart'; // la page d’inscription
-
+import 'main.dart'; // <-- Assure-toi que c'est le bon fichier efffcer de fleche
 class IntroPage extends StatelessWidget {
   const IntroPage({super.key});
 
@@ -70,7 +70,33 @@ class IntroPage extends StatelessWidget {
               },
             ),
           ),
-        ],
+
+          //effacer selment pour le test
+
+
+    Positioned(
+    bottom: 90,
+    left: 20,
+    child: IconButton(
+    icon: const Icon(Icons.arrow_back_ios),
+    color: Color(0xFFE61580),
+    iconSize: 30,
+    onPressed: () {
+    Navigator.pushAndRemoveUntil(
+    context,
+    MaterialPageRoute(builder: (context) => const FirstPage()),
+    (route) => false,
+    );
+    },
+    ),
+    ),
+
+
+
+
+
+
+    ],
       ),
     );
   }
