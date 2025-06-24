@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scholaria_shop_v1/accueil.dart';
 import 's_inscrire.dart';
 
 class SeConnecter extends StatefulWidget {
@@ -56,7 +57,7 @@ String email = '';
                 // Email
                 TextFormField(
                   focusNode: focusEmail,
-                  cursorColor: couleurGris,
+                  cursorColor: couleurGris, // ✅ Curseur gris
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     label: Text('Adresse Email', style: TextStyle(color: couleurGris, fontSize: 16)),
@@ -64,9 +65,23 @@ String email = '';
                     filled: true,
                     fillColor: Colors.white,
                     contentPadding: const EdgeInsets.symmetric(vertical: 6),
+
+                    // ✅ Bordure quand non focus
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: Colors.grey.shade600),
+                    ),
+
+                    // ✅ Bordure quand focus
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: Colors.grey.shade600),
+                    ),
+
+                    // ✅ Bordure par défaut (optionnelle)
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: Colors.grey.shade400),
+                      borderSide: BorderSide(color: Colors.grey.shade600),
                     ),
                   ),
                   onChanged: (val) {
@@ -76,6 +91,7 @@ String email = '';
                   },
                 ),
 
+
                 const SizedBox(height: 16),
 
                 // Mot de passe
@@ -84,7 +100,10 @@ String email = '';
                   cursorColor: couleurGris,
                   obscureText: cacherMotDePasse,
                   decoration: InputDecoration(
-                    label: Text('Mot de passe', style: TextStyle(color: couleurGris, fontSize: 16)),
+                    label: Text(
+                      'Mot de passe',
+                      style: TextStyle(color: couleurGris, fontSize: 16),
+                    ),
                     prefixIcon: Icon(Icons.lock, color: couleurGris),
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -100,9 +119,23 @@ String email = '';
                     filled: true,
                     fillColor: Colors.white,
                     contentPadding: const EdgeInsets.symmetric(vertical: 6),
+
+                    // 🟩 Bordure quand non sélectionné
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: Colors.grey.shade600),
+                    ),
+
+                    // 🟩 Bordure quand sélectionné (focus)
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: Colors.grey.shade600, width: 2),
+                    ),
+
+                    // 🟩 Bordure par défaut
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: Colors.grey.shade400),
+                      borderSide: BorderSide(color: Colors.grey.shade600),
                     ),
                   ),
                   onChanged: (val) {
@@ -111,6 +144,7 @@ String email = '';
                     });
                   },
                 ),
+
 
                 const SizedBox(height: 10),
 
@@ -272,8 +306,7 @@ String email = '';
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const PageAccueil ()
-                        ),
+                        MaterialPageRoute(builder: (context) => const PageAccueil ()),
                       );
                     },
                   ),
