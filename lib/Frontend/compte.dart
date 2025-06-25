@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'compte_utilisateur.dart';
+import 'compte_entreprise.dart';
 
 class PageCompte extends StatefulWidget {
   final String nomUtilisateur;
@@ -22,17 +24,43 @@ class _PageCompteState extends State<PageCompte> {
   bool _selectedUser = false;
   bool _selectedEntreprise = false;
 
-  void _selectUser() {
+  Future<void> _onUserTap() async {
     setState(() {
       _selectedUser = true;
       _selectedEntreprise = false;
     });
-  }
 
-  void _selectEntreprise() {
+    await Future.delayed(const Duration(milliseconds: 150));
+
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => CompteUtilisateurPage(nomUtilisateur: widget.nomUtilisateur),
+      ),
+    );
+
     setState(() {
       _selectedUser = false;
+    });
+  }
+
+  Future<void> _onEntrepriseTap() async {
+    setState(() {
       _selectedEntreprise = true;
+      _selectedUser = false;
+    });
+
+    await Future.delayed(const Duration(milliseconds: 150));
+
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => CompteEntreprisePage(nomEntreprise: widget.nomEntreprise),
+      ),
+    );
+
+    setState(() {
+      _selectedEntreprise = false;
     });
   }
 
@@ -50,12 +78,12 @@ class _PageCompteState extends State<PageCompte> {
               child: Image.asset(
                 'assets/logo2.png',
                 width: 250,
-                height:250,
+                height: 250,
                 fit: BoxFit.contain,
               ),
             ),
 
-            const SizedBox(height: 10),
+            const SizedBox(height: 13),
 
             // Contenu principal : 2 containers cliquables
             Center(
@@ -76,16 +104,18 @@ class _PageCompteState extends State<PageCompte> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Container Nom complet
+                    // Container Nom complet - Utilisateur
                     GestureDetector(
-                      onTap: _selectUser,
+                      onTap: _onUserTap,
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 200),
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         margin: const EdgeInsets.only(bottom: 12),
                         decoration: BoxDecoration(
                           color: _selectedUser ? rose.withOpacity(0) : Colors.transparent,
-                          border: Border.all(color: _selectedUser ? rose : Colors.grey.shade400),
+                          border: Border.all(
+                            color: _selectedUser ? rose : Colors.grey.shade400,
+                          ),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
@@ -106,15 +136,17 @@ class _PageCompteState extends State<PageCompte> {
                       ),
                     ),
 
-                    // Container Nom entreprise
+                    // Container Nom entreprise - Entreprise
                     GestureDetector(
-                      onTap: _selectEntreprise,
+                      onTap: _onEntrepriseTap,
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 200),
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         decoration: BoxDecoration(
                           color: _selectedEntreprise ? rose.withOpacity(0) : Colors.transparent,
-                          border: Border.all(color: _selectedEntreprise ? rose : Colors.grey.shade400),
+                          border: Border.all(
+                            color: _selectedEntreprise ? rose : Colors.grey.shade400,
+                          ),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(

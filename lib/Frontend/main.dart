@@ -3,7 +3,7 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:scholaria_shop_v1/page_splash1.dart'; // page d’introduction
+import 'package:scholaria_shop_v1/Frontend/page_splash1.dart'; // page d’introduction
 
 void main() {
   runApp(const MyApp());
