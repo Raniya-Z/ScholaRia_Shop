@@ -1,6 +1,5 @@
-
 import 'package:flutter/material.dart';
-import 'package:scholaria_shop_v1/se_connecter.dart';
+import 'package:scholaria_shop_v1/Frontend/se_connecter.dart';
 
 class PageInscription extends StatefulWidget {
   const PageInscription({super.key});
@@ -34,7 +33,6 @@ class _PageInscriptionState extends State<PageInscription> {
   bool cacherMotDePasse = true;
   bool cacherConfirmation = true;
 
-  final Color couleurGris = Colors.grey.shade600;
   late FocusNode focusNom;
   late FocusNode focusEmail;
   late FocusNode focusMotDePasse;
@@ -43,43 +41,15 @@ class _PageInscriptionState extends State<PageInscription> {
   @override
   void initState() {
     super.initState();
-
     focusNom = FocusNode();
     focusEmail = FocusNode();
     focusMotDePasse = FocusNode();
     focusConfirmation = FocusNode();
 
-    focusNom.addListener(() {
-      if (focusNom.hasFocus) {
-        setState(() {
-          etoileErreurNom = true;
-        });
-      }
-    });
-
-    focusEmail.addListener(() {
-      if (focusEmail.hasFocus) {
-        setState(() {
-          etoileErreurEmail = true;
-        });
-      }
-    });
-
-    focusMotDePasse.addListener(() {
-      if (focusMotDePasse.hasFocus) {
-        setState(() {
-          etoileErreurMotDePasse = true;
-        });
-      }
-    });
-
-    focusConfirmation.addListener(() {
-      if (focusConfirmation.hasFocus) {
-        setState(() {
-          etoileErreurConfirmation = true;
-        });
-      }
-    });
+    focusNom.addListener(() => setState(() => etoileErreurNom = focusNom.hasFocus));
+    focusEmail.addListener(() => setState(() => etoileErreurEmail = focusEmail.hasFocus));
+    focusMotDePasse.addListener(() => setState(() => etoileErreurMotDePasse = focusMotDePasse.hasFocus));
+    focusConfirmation.addListener(() => setState(() => etoileErreurConfirmation = focusConfirmation.hasFocus));
   }
 
   @override
@@ -91,388 +61,163 @@ class _PageInscriptionState extends State<PageInscription> {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final Color couleurGris = isDark ? Colors.grey.shade300 : Colors.grey.shade600;
+    final Color fond = isDark ? const Color(0xFF121212) : const Color(0xFFFAFAFA);
+    final Color champFond = isDark ? const Color(0xFF1E1E1E) : Colors.white;
+    final Color texteNoir = isDark ? Colors.white70 : Colors.black;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFFAFAFA),
+      backgroundColor: fond,
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Center(
-              child: Container(
-                margin: const EdgeInsets.only(bottom: 0),
-                child: Image.asset(
-                  'assets/logo2.png',
-                  width: 250,
-                  height: 250,
-                ),
+              child: Image.asset(
+                isDark ? 'assets/logo1_sombre.png' : 'assets/logo2.png',
+                width: 250,
+                height: 250,
               ),
             ),
             Form(
               key: _formKey,
               child: Column(
                 children: [
-                  // Nom complet
-                  TextFormField(
+                  // NOM COMPLET
+                  _buildTextField(
+                    label: 'Nom complet',
+                    value: nomComplet,
+                    isDark: isDark,
                     focusNode: focusNom,
-                    cursorColor: couleurGris,
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
-                      label: RichText(
-                        text: TextSpan(
-                          text: 'Nom complet',
-                          style: TextStyle(color: couleurGris, fontSize: 16),
-                          children: etoileErreurNom
-                              ? [
-                            TextSpan(
-                              text: ' *',
-                              style: TextStyle(color: Colors.red),
-                            )
-                          ]
-                              : [],
-                        ),
-                      ),
-                      prefixIcon: Icon(Icons.person, color: couleurGris),
-                      filled: true,
-                      fillColor: Colors.white,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 6),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
-                            color: cadreVertValideNom ? Colors.green : Colors.grey.shade400),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
-                            color: cadreVertValideNom ? Colors.green : Colors.grey.shade400),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
-                            color: cadreVertValideNom ? Colors.green : Colors.grey.shade400),
-                      ),
-                    ),
-                    onChanged: (val) {
-                      if (val.isNotEmpty &&
-                          val.length >= 3 &&
-                          _regexNom.hasMatch(val)) {
-                        setState(() {
-                          etoileErreurNom = false;
-                          cadreVertValideNom = true;
-                        });
-                      } else {
-                        setState(() {
-                          etoileErreurNom = true;
-                          cadreVertValideNom = false;
-                        });
-                      }
-                    },
+                    couleurGris: couleurGris,
+                    champFond: champFond,
+                    texteNoir: texteNoir,
+                    icon: Icons.person,
+                    etoileErreur: etoileErreurNom,
+                    cadreVert: cadreVertValideNom,
                     validator: (val) {
-                      if (val == null || val.isEmpty) {
+                      if (val == null || val.isEmpty || val.length < 3 || !_regexNom.hasMatch(val)) {
                         setState(() {
                           etoileErreurNom = true;
                           cadreVertValideNom = false;
                         });
-                        return 'Ce champ est obligatoire';
-                      }
-                      if (val.length < 3) {
-                        setState(() {
-                          etoileErreurNom = true;
-                          cadreVertValideNom = false;
-                        });
-                        return 'Au moins 3 caractères';
-                      }
-                      if (!_regexNom.hasMatch(val)) {
-                        setState(() {
-                          etoileErreurNom = true;
-                          cadreVertValideNom = false;
-                        });
-                        return "Entrez votre nom complet Ex. 'Prénom' ou 'Prénom Nom' (lettres et espaces uniquement)";
+                        return 'Entrez un nom valide';
                       }
                       setState(() {
-                        etoileErreurNom = false;
                         cadreVertValideNom = true;
+                        etoileErreurNom = false;
                       });
                       return null;
+                    },
+                    onChanged: (val) {
+                      nomComplet = val;
+                      setState(() {
+                        cadreVertValideNom = _regexNom.hasMatch(val);
+                        etoileErreurNom = !cadreVertValideNom;
+                      });
                     },
                     onSaved: (val) => nomComplet = val ?? '',
                   ),
-                  if (cadreVertValideNom)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4, right: 12),
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          'Correct',
-                          style: TextStyle(color: Colors.green, fontSize: 12),
-                        ),
-                      ),
-                    ),
 
+                  if (cadreVertValideNom)
+                    _buildCorrectLabel(),
 
                   const SizedBox(height: 15),
 
-                  // Email
-                  TextFormField(
+                  // EMAIL
+                  _buildTextField(
+                    label: 'Adresse Email',
+                    value: email,
+                    isDark: isDark,
                     focusNode: focusEmail,
-                    cursorColor: couleurGris,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                      label: RichText(
-                        text: TextSpan(
-                          text: 'Adresse Email',
-                          style: TextStyle(color: couleurGris, fontSize: 16),
-                          children: etoileErreurEmail
-                              ? [
-                            TextSpan(
-                              text: ' *',
-                              style: TextStyle(color: Colors.red),
-                            )
-                          ]
-                              : [],
-                        ),
-                      ),
-                      prefixIcon: Icon(Icons.email, color: couleurGris),
-                      filled: true,
-                      fillColor: Colors.white,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 6),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
-                            color: cadreVertValideEmail ? Colors.green : Colors.grey.shade400),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
-                            color: cadreVertValideEmail ? Colors.green : Colors.grey.shade400),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
-                            color: cadreVertValideEmail ? Colors.green : Colors.grey.shade400),
-                      ),
-                    ),
-                    onChanged: (val) {
-                      if (val.isNotEmpty && RegExp(r'^[\w\.\-]+@gmail\.com$').hasMatch(val)) {
-                        setState(() {
-                          etoileErreurEmail = false;
-                          cadreVertValideEmail = true;
-                        });
-                      } else {
-                        setState(() {
-                          etoileErreurEmail = true;
-                          cadreVertValideEmail = false;
-                        });
-                      }
-                    },
+                    couleurGris: couleurGris,
+                    champFond: champFond,
+                    texteNoir: texteNoir,
+                    icon: Icons.email,
+                    etoileErreur: etoileErreurEmail,
+                    cadreVert: cadreVertValideEmail,
                     validator: (val) {
-                      if (val == null || val.isEmpty) {
+                      if (val == null || !RegExp(r'^[\w\.\-]+@gmail\.com$').hasMatch(val)) {
                         setState(() {
                           etoileErreurEmail = true;
                           cadreVertValideEmail = false;
                         });
-                        return 'Ce champ est obligatoire';
-                      }
-                      if (!RegExp(r'^[\w\.\-]+@gmail\.com$').hasMatch(val)) {
-                        setState(() {
-                          etoileErreurEmail = true;
-                          cadreVertValideEmail = false;
-                        });
-                        return 'Email invalide Ex. exemple@gmail.com';
+                        return 'Email invalide';
                       }
                       setState(() {
-                        etoileErreurEmail = false;
                         cadreVertValideEmail = true;
+                        etoileErreurEmail = false;
                       });
                       return null;
+                    },
+                    onChanged: (val) {
+                      email = val;
+                      setState(() {
+                        cadreVertValideEmail = RegExp(r'^[\w\.\-]+@gmail\.com$').hasMatch(val);
+                        etoileErreurEmail = !cadreVertValideEmail;
+                      });
                     },
                     onSaved: (val) => email = val ?? '',
                   ),
 
                   if (cadreVertValideEmail)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4, right: 12),
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          'Correct',
-                          style: TextStyle(color: Colors.green, fontSize: 12),
-                        ),
-                      ),
-                    ),
-
+                    _buildCorrectLabel(),
 
                   const SizedBox(height: 15),
 
-                  // Mot de passe
-                  TextFormField(
+                  // MOT DE PASSE
+                  _buildPasswordField(
+                    label: 'Mot de passe',
+                    controllerValue: motDePasse,
+                    isDark: isDark,
                     focusNode: focusMotDePasse,
-                    cursorColor: couleurGris,
-                    obscureText: cacherMotDePasse,
-                    decoration: InputDecoration(
-                      label: RichText(
-                        text: TextSpan(
-                          text: 'Mot de passe',
-                          style: TextStyle(color: couleurGris, fontSize: 16),
-                          children: etoileErreurMotDePasse
-                              ? [
-                            TextSpan(
-                              text: ' *',
-                              style: TextStyle(color: Colors.red),
-                            )
-                          ]
-                              : [],
-                        ),
-                      ),
-                      prefixIcon: Icon(Icons.lock, color: couleurGris),
-                      filled: true,
-                      fillColor: Colors.white,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 6),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: cadreVertValideMotDePasse ? Colors.green : Colors.grey.shade400),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: cadreVertValideMotDePasse ? Colors.green : Colors.grey.shade400),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: cadreVertValideMotDePasse ? Colors.green : Colors.grey.shade400),
-                      ),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          cacherMotDePasse ? Icons.visibility_off : Icons.visibility,
-                          color: couleurGris,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            cacherMotDePasse = !cacherMotDePasse;
-                          });
-                        },
-                      ),
-                    ),
-                    onChanged: (val) {
-                      motDePasse = val;
-                      if (_regexMotDePasse.hasMatch(val)) {
-                        setState(() {
-                          cadreVertValideMotDePasse = true;
-                          etoileErreurMotDePasse = false;
-                        });
-                      } else {
-                        setState(() {
-                          cadreVertValideMotDePasse = false;
-                        });
-                      }
-                    },
+                    couleurGris: couleurGris,
+                    champFond: champFond,
+                    texteNoir: texteNoir,
+                    cacher: cacherMotDePasse,
+                    onToggle: () => setState(() => cacherMotDePasse = !cacherMotDePasse),
+                    etoileErreur: etoileErreurMotDePasse,
+                    cadreVert: cadreVertValideMotDePasse,
                     validator: (val) {
-                      if (val == null || val.isEmpty) {
+                      if (!_regexMotDePasse.hasMatch(val ?? '')) {
                         setState(() {
                           etoileErreurMotDePasse = true;
                           cadreVertValideMotDePasse = false;
                         });
-                        return 'Ce champ est obligatoire';
-                      }
-                      if (!_regexMotDePasse.hasMatch(val)) {
-                        setState(() {
-                          etoileErreurMotDePasse = true;
-                          cadreVertValideMotDePasse = false;
-                        });
-                        return 'Min. 6 caractères avec une lettre, un chiffre et un caractère spécial (_, #, @)';
+                        return 'Min. 6 caractères, lettre, chiffre, caractère spécial';
                       }
                       setState(() {
-                        etoileErreurMotDePasse = false;
                         cadreVertValideMotDePasse = true;
+                        etoileErreurMotDePasse = false;
                       });
                       return null;
                     },
+                    onChanged: (val) => motDePasse = val,
                   ),
+
                   if (cadreVertValideMotDePasse)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4, right: 12),
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          'Correct',
-                          style: TextStyle(color: Colors.green, fontSize: 12),
-                        ),
-                      ),
-                    ),
+                    _buildCorrectLabel(),
 
                   const SizedBox(height: 15),
 
-                  // Confirmation mot de passe
-                  TextFormField(
+                  // CONFIRMATION
+                  _buildPasswordField(
+                    label: 'Confirmer le mot de passe',
+                    controllerValue: confirmationMotDePasse,
+                    isDark: isDark,
                     focusNode: focusConfirmation,
-                    cursorColor: couleurGris,
-                    obscureText: cacherConfirmation,
-                    decoration: InputDecoration(
-                      label: RichText(
-                        text: TextSpan(
-                          text: 'Confirmer le mot de passe',
-                          style: TextStyle(color: couleurGris, fontSize: 16),
-                          children: etoileErreurConfirmation
-                              ? [
-                            TextSpan(
-                              text: ' *',
-                              style: TextStyle(color: Colors.red),
-                            )
-                          ]
-                              : [],
-                        ),
-                      ),
-                      prefixIcon: Icon(Icons.lock, color: couleurGris),
-                      filled: true,
-                      fillColor: Colors.white,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 6),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: cadreVertValideConfirmation ? Colors.green : Colors.grey.shade400),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: cadreVertValideConfirmation ? Colors.green : Colors.grey.shade400),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: cadreVertValideConfirmation ? Colors.green : Colors.grey.shade400),
-                      ),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          cacherConfirmation ? Icons.visibility_off : Icons.visibility,
-                          color: couleurGris,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            cacherConfirmation = !cacherConfirmation;
-                          });
-                        },
-                      ),
-                    ),
-                    onChanged: (val) {
-                      confirmationMotDePasse = val;
-                      if (val == motDePasse && val.length >= 6) {
-                        setState(() {
-                          cadreVertValideConfirmation = true;
-                          etoileErreurConfirmation = false;
-                        });
-                      } else {
-                        setState(() {
-                          cadreVertValideConfirmation = false;
-                        });
-                      }
-                    },
+                    couleurGris: couleurGris,
+                    champFond: champFond,
+                    texteNoir: texteNoir,
+                    cacher: cacherConfirmation,
+                    onToggle: () => setState(() => cacherConfirmation = !cacherConfirmation),
+                    etoileErreur: etoileErreurConfirmation,
+                    cadreVert: cadreVertValideConfirmation,
                     validator: (val) {
-                      if (val == null || val.isEmpty) {
-                        setState(() {
-                          etoileErreurConfirmation = true;
-                          cadreVertValideConfirmation = false;
-                        });
-                        return 'Ce champ est obligatoire';
-                      }
                       if (val != motDePasse) {
                         setState(() {
                           etoileErreurConfirmation = true;
@@ -481,38 +226,27 @@ class _PageInscriptionState extends State<PageInscription> {
                         return 'Les mots de passe ne correspondent pas';
                       }
                       setState(() {
-                        etoileErreurConfirmation = false;
                         cadreVertValideConfirmation = true;
+                        etoileErreurConfirmation = false;
                       });
                       return null;
                     },
-                    onSaved: (val) => confirmationMotDePasse = val ?? '',
+                    onChanged: (val) => confirmationMotDePasse = val,
                   ),
+
                   if (cadreVertValideConfirmation)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4, right: 12),
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          'Correct',
-                          style: TextStyle(color: Colors.green, fontSize: 12),
-                        ),
-                      ),
-                    ),
+                    _buildCorrectLabel(),
+
                   const SizedBox(height: 20),
 
-                  // Bouton S'inscrire
+                  // BOUTON S’INSCRIRE
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(0,10),
                         backgroundColor: const Color(0xFFE61580),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 4),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
                       ),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
@@ -522,125 +256,163 @@ class _PageInscriptionState extends State<PageInscription> {
                           );
                         }
                       },
-                      child: const Text(
-                        'S’inscrire',
-                        style: TextStyle(fontSize: 16, color: Colors.white),
-                      ),
+                      child: const Text('S’inscrire', style: TextStyle(color: Colors.white)),
                     ),
                   ),
+
                   const SizedBox(height: 25),
 
-                  // "ou"
+                  // OU
                   Row(
-                    children: [
+                    children: const [
                       Expanded(child: Divider(color: Color(0xFFE61580))),
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8),
                         child: Text("ou"),
                       ),
                       Expanded(child: Divider(color: Color(0xFFE61580))),
                     ],
                   ),
+
                   const SizedBox(height: 20),
 
-                  // Google
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton.icon(
-                      icon: Image.asset('assets/google.jpeg', height: 20),
-                      label: const Text(
-                        'Continuer avec Google',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      onPressed: () {},
-                    ),
-                  ),
+                  // BOUTONS GOOGLE & FACEBOOK
+                  _buildSocialButton('Continuer avec Google', 'assets/google.jpeg', texteNoir),
                   const SizedBox(height: 10),
+                  _buildSocialButton('Continuer avec Facebook', 'assets/facebook.jpeg', texteNoir),
 
-                  // Facebook
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton.icon(
-                      icon: Image.asset('assets/facebook.jpeg', height: 20),
-                      label: const Text(
-                        'Continuer avec Facebook',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      onPressed: () {},
-                    ),
-                  ),
                   const SizedBox(height: 20),
 
-// Message avec lien "Login"
+                  // LIEN LOGIN
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        'Déjà vous avez un compte ? ',
-                        style: TextStyle(color: Colors.grey.shade600),
-                      ),
+                      Text('Déjà vous avez un compte ? ', style: TextStyle(color: couleurGris)),
                       GestureDetector(
                         onTap: () {
                           if (_formKey.currentState?.validate() ?? false) {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => SeConnecter(nomComplet: '',)),
+                              MaterialPageRoute(builder: (_) => const SeConnecter(nomComplet: '')),
                             );
                           }
                         },
-                        child: const Text(
-                          ' Login',
-                          style: TextStyle(
-                            color: Color(0xFFE61580), // rose
-                            fontWeight: FontWeight.bold,
-
-                          ),
-                        ),
+                        child: const Text(' Login', style: TextStyle(color: Color(0xFFE61580), fontWeight: FontWeight.bold)),
                       ),
-
                     ],
                   ),
-
-
-
-                  // effacer apres selement pour passer voir le design facilement
-                  Positioned(
-                    bottom: 90,
-                    right: 20,
-                    child: IconButton(
-                      icon: const Icon(Icons.arrow_forward_ios),
-                      color: Color(0xFFE61580), // flèche rose
-                      iconSize: 30,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const SeConnecter(nomComplet: '',)),
-                        );
-                      },
-                    ),
-                  ),
-
-                  Positioned(
-                    bottom: 90,
-                    left: 20,
-                    child: IconButton(
-                      icon: const Icon(Icons.arrow_back_ios), // flèche vers la gauche
-                      color: Color(0xFFE61580), // rose
-                      iconSize: 30,
-                      onPressed: () {
-                        Navigator.pop(context); // revenir à la page précédente
-                      },
-                    ),
-                  ),
-
-
-
-
                 ],
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required String label,
+    required String value,
+    required FocusNode focusNode,
+    required bool isDark,
+    required Color couleurGris,
+    required Color champFond,
+    required Color texteNoir,
+    required IconData icon,
+    required bool etoileErreur,
+    required bool cadreVert,
+    required FormFieldValidator<String> validator,
+    required ValueChanged<String> onChanged,
+    required FormFieldSetter<String> onSaved,
+  }) {
+    return TextFormField(
+      focusNode: focusNode,
+      cursorColor: couleurGris,
+      style: TextStyle(color: texteNoir),
+      decoration: InputDecoration(
+        label: RichText(
+          text: TextSpan(
+            text: label,
+            style: TextStyle(color: couleurGris, fontSize: 16),
+            children: etoileErreur ? [const TextSpan(text: ' *', style: TextStyle(color: Colors.red))] : [],
+          ),
+        ),
+        prefixIcon: Icon(icon, color: couleurGris),
+        filled: true,
+        fillColor: champFond,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: cadreVert ? Colors.green : couleurGris),
+        ),
+      ),
+      validator: validator,
+      onChanged: onChanged,
+      onSaved: onSaved,
+    );
+  }
+
+  Widget _buildPasswordField({
+    required String label,
+    required String controllerValue,
+    required FocusNode focusNode,
+    required bool isDark,
+    required bool cacher,
+    required VoidCallback onToggle,
+    required Color couleurGris,
+    required Color champFond,
+    required Color texteNoir,
+    required bool etoileErreur,
+    required bool cadreVert,
+    required FormFieldValidator<String> validator,
+    required ValueChanged<String> onChanged,
+  }) {
+    return TextFormField(
+      focusNode: focusNode,
+      cursorColor: couleurGris,
+      obscureText: cacher,
+      style: TextStyle(color: texteNoir),
+      decoration: InputDecoration(
+        label: RichText(
+          text: TextSpan(
+            text: label,
+            style: TextStyle(color: couleurGris, fontSize: 16),
+            children: etoileErreur ? [const TextSpan(text: ' *', style: TextStyle(color: Colors.red))] : [],
+          ),
+        ),
+        prefixIcon: Icon(Icons.lock, color: couleurGris),
+        suffixIcon: IconButton(
+          icon: Icon(cacher ? Icons.visibility_off : Icons.visibility, color: couleurGris),
+          onPressed: onToggle,
+        ),
+        filled: true,
+        fillColor: champFond,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: cadreVert ? Colors.green : couleurGris),
+        ),
+      ),
+      validator: validator,
+      onChanged: onChanged,
+    );
+  }
+
+  Widget _buildCorrectLabel() {
+    return const Padding(
+      padding: EdgeInsets.only(top: 4, right: 12),
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: Text('Correct', style: TextStyle(color: Colors.green, fontSize: 12)),
+      ),
+    );
+  }
+
+  Widget _buildSocialButton(String text, String asset, Color textColor) {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton.icon(
+        icon: Image.asset(asset, height: 20),
+        label: Text(text, style: TextStyle(color: textColor)),
+        onPressed: () {},
       ),
     );
   }

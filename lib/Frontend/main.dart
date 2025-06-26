@@ -1,26 +1,49 @@
-
-
-
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:scholaria_shop_v1/Frontend/page_splash1.dart'; // page d’introduction
+import 'package:provider/provider.dart';
+import 'package:scholaria_shop_v1/Frontend/page_splash1.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:scholaria_shop_v1/Frontend/theme_provider.dart';
+import 'Frontend/page_splash1.dart';
+import 'Frontend/compte_utilisateur.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ThemeProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: FirstPage(), // ← On démarre ici
+      themeMode: themeProvider.themeMode,
+      theme: ThemeData(
+        scaffoldBackgroundColor: const Color(0xFFFAFAFA),
+        brightness: Brightness.light,
+        fontFamily: 'Roboto',
+        primarySwatch: Colors.pink,
+      ),
+      darkTheme: ThemeData(
+        scaffoldBackgroundColor: const Color(0xFF121212),
+        brightness: Brightness.dark,
+        fontFamily: 'Roboto',
+        primarySwatch: Colors.pink,
+      ),
+      home: const FirstPage(), // ← Splash screen
     );
   }
 }
 
-// ⚠️ ici, FirstPage devient un StatefulWidget pour gérer le Timer
 class FirstPage extends StatefulWidget {
   const FirstPage({super.key});
 
@@ -32,7 +55,7 @@ class _FirstPageState extends State<FirstPage> {
   @override
   void initState() {
     super.initState();
-    // Attendre 4 secondes puis naviguer vers IntroPage
+    // Attendre 3 secondes avant d’aller vers IntroPage
     Timer(const Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
@@ -44,10 +67,10 @@ class _FirstPageState extends State<FirstPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFE61580), // fond rose
+      backgroundColor: const Color(0xFFE61580),
       body: Center(
         child: Image.asset(
-          'assets/logo.png', // ton logo
+          'assets/logo.png',
           width: 300,
           height: 300,
         ),
@@ -55,5 +78,3 @@ class _FirstPageState extends State<FirstPage> {
     );
   }
 }
-
-

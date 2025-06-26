@@ -40,6 +40,7 @@ class _PageInscriptionState extends State<PageInscription> {
   late FocusNode focusMotDePasse;
   late FocusNode focusConfirmation;
 
+
   @override
   void initState() {
     super.initState();
@@ -94,6 +95,7 @@ class _PageInscriptionState extends State<PageInscription> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       backgroundColor: const Color(0xFFFAFAFA),
       body: SingleChildScrollView(
@@ -105,7 +107,7 @@ class _PageInscriptionState extends State<PageInscription> {
               child: Container(
                 margin: const EdgeInsets.only(bottom: 0),
                 child: Image.asset(
-                  'assets/logo2.png',
+                  isDark ? 'assets/logo1_sombre.png' : 'assets/logo2.png',
                   width: 250,
                   height: 250,
                 ),

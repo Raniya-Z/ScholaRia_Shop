@@ -13,12 +13,10 @@ class SeConnecter extends StatefulWidget {
 
 class _SeConnecterState extends State<SeConnecter> {
   final _formKey = GlobalKey<FormState>();
-String email = '';
+  String email = '';
   String motDePasse = '';
   bool cacherMotDePasse = true;
   bool rememberMe = false;
-
-  final Color couleurGris = Colors.grey.shade600;
 
   final FocusNode focusEmail = FocusNode();
   final FocusNode focusMotDePasse = FocusNode();
@@ -32,8 +30,14 @@ String email = '';
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final Color couleurGris = isDark ? Colors.grey.shade300 : Colors.grey.shade600;
+    final Color fond = isDark ? const Color(0xFF121212) : const Color(0xFFFAFAFA);
+    final Color champFond = isDark ? const Color(0xFF1E1E1E) : Colors.white;
+    final Color texteNoir = isDark ? Colors.white70 : Colors.black;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFFAFAFA),
+      backgroundColor: fond,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
@@ -46,7 +50,7 @@ String email = '';
                   child: Container(
                     margin: const EdgeInsets.only(bottom: 0),
                     child: Image.asset(
-                      'assets/logo2.png',
+                      isDark ? 'assets/logo1_sombre.png' : 'assets/logo2.png',
                       width: 250,
                       height: 250,
                     ),
@@ -59,22 +63,19 @@ String email = '';
                   focusNode: focusEmail,
                   cursorColor: couleurGris,
                   keyboardType: TextInputType.emailAddress,
+                  style: TextStyle(color: texteNoir),
                   decoration: InputDecoration(
-                    label: Text('Adresse Email', style: TextStyle(color: couleurGris, fontSize: 16)),
+                    label: Text('Adresse Email', style: TextStyle(color: couleurGris)),
                     prefixIcon: Icon(Icons.email, color: couleurGris),
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: champFond,
                     contentPadding: const EdgeInsets.symmetric(vertical: 6),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: Colors.grey.shade400),
+                      borderSide: BorderSide(color: couleurGris),
                     ),
                   ),
-                  onChanged: (val) {
-                    setState(() {
-                      email = val;
-                    });
-                  },
+                  onChanged: (val) => setState(() => email = val),
                 ),
 
                 const SizedBox(height: 16),
@@ -84,33 +85,26 @@ String email = '';
                   focusNode: focusMotDePasse,
                   cursorColor: couleurGris,
                   obscureText: cacherMotDePasse,
+                  style: TextStyle(color: texteNoir),
                   decoration: InputDecoration(
-                    label: Text('Mot de passe', style: TextStyle(color: couleurGris, fontSize: 16)),
+                    label: Text('Mot de passe', style: TextStyle(color: couleurGris)),
                     prefixIcon: Icon(Icons.lock, color: couleurGris),
                     suffixIcon: IconButton(
                       icon: Icon(
                         cacherMotDePasse ? Icons.visibility_off : Icons.visibility,
                         color: couleurGris,
                       ),
-                      onPressed: () {
-                        setState(() {
-                          cacherMotDePasse = !cacherMotDePasse;
-                        });
-                      },
+                      onPressed: () => setState(() => cacherMotDePasse = !cacherMotDePasse),
                     ),
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: champFond,
                     contentPadding: const EdgeInsets.symmetric(vertical: 6),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: Colors.grey.shade400),
+                      borderSide: BorderSide(color: couleurGris),
                     ),
                   ),
-                  onChanged: (val) {
-                    setState(() {
-                      motDePasse = val;
-                    });
-                  },
+                  onChanged: (val) => setState(() => motDePasse = val),
                 ),
 
                 const SizedBox(height: 10),
@@ -122,30 +116,21 @@ String email = '';
                     Row(
                       children: [
                         Transform.scale(
-                          scale: 0.8, // taille réduite à 80%
+                          scale: 0.8,
                           child: Checkbox(
                             value: rememberMe,
-                            fillColor: MaterialStateProperty.all(Colors.white),
+                            fillColor: MaterialStateProperty.all(champFond),
                             side: MaterialStateBorderSide.resolveWith(
-                                  (states) => BorderSide(
-                                color: Colors.grey.shade800, // gris foncé pour le cadre
-                                width: 2,
-                              ),
+                                  (states) => BorderSide(color: couleurGris, width: 2),
                             ),
-                            onChanged: (value) {
-                              setState(() {
-                                rememberMe = value ?? false;
-                              });
-                            },
+                            onChanged: (value) => setState(() => rememberMe = value ?? false),
                           ),
                         ),
                         Text("Se souvenir de moi", style: TextStyle(color: couleurGris)),
                       ],
                     ),
                     TextButton(
-                      onPressed: () {
-                        // action mot de passe oublié
-                      },
+                      onPressed: () {},
                       child: const Text(
                         "Mot de passe oublié ?",
                         style: TextStyle(color: Color(0xFFE61580), fontWeight: FontWeight.w500),
@@ -161,10 +146,10 @@ String email = '';
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(0,10),
+                      minimumSize: const Size(0, 10),
                       backgroundColor: const Color(0xFFE61580),
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 4),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -189,12 +174,12 @@ String email = '';
                 // OU
                 Row(
                   children: [
-                    Expanded(child: Divider(color: Color(0xFFE61580))),
+                    Expanded(child: Divider(color: const Color(0xFFE61580))),
                     const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8),
                       child: Text("ou"),
                     ),
-                    Expanded(child: Divider(color: Color(0xFFE61580))),
+                    Expanded(child: Divider(color: const Color(0xFFE61580))),
                   ],
                 ),
 
@@ -205,24 +190,17 @@ String email = '';
                   width: double.infinity,
                   child: OutlinedButton.icon(
                     icon: Image.asset('assets/google.jpeg', height: 20),
-                    label: const Text(
-                      'Continuer avec Google',
-                      style: TextStyle(color: Colors.black),
-                    ),
+                    label: Text('Continuer avec Google', style: TextStyle(color: texteNoir)),
                     onPressed: () {},
                   ),
                 ),
                 const SizedBox(height: 10),
 
-                // Facebook
                 SizedBox(
                   width: double.infinity,
                   child: OutlinedButton.icon(
                     icon: Image.asset('assets/facebook.jpeg', height: 20),
-                    label: const Text(
-                      'Continuer avec Facebook',
-                      style: TextStyle(color: Colors.black),
-                    ),
+                    label: Text('Continuer avec Facebook', style: TextStyle(color: texteNoir)),
                     onPressed: () {},
                   ),
                 ),
@@ -235,9 +213,8 @@ String email = '';
                   children: [
                     Text(
                       "Vous n'avez pas de compte ?",
-                      style: TextStyle(color: Colors.grey.shade600),
+                      style: TextStyle(color: couleurGris),
                     ),
-
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -248,7 +225,7 @@ String email = '';
                       child: const Text(
                         " S'inscrire",
                         style: TextStyle(
-                          color: Color(0xFFE61580), // rose
+                          color: Color(0xFFE61580),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -256,50 +233,31 @@ String email = '';
                   ],
                 ),
 
-
                 const SizedBox(height: 20),
 
-                //effacer
-
-
-
-                Positioned(
-                  bottom: 90,
-                  right: 20,
-                  child: IconButton(
-                    icon: const Icon(Icons.arrow_forward_ios),
-                    color: Color(0xFFE61580), // flèche rose
-                    iconSize: 30,
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const PageAccueil ()),
-                      );
-                    },
-                  ),
+                // Flèches
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back_ios),
+                      color: const Color(0xFFE61580),
+                      iconSize: 30,
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.arrow_forward_ios),
+                      color: const Color(0xFFE61580),
+                      iconSize: 30,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const PageAccueil()),
+                        );
+                      },
+                    ),
+                  ],
                 ),
-                Positioned(
-                  bottom: 90,
-                  left: 20,
-                  child: IconButton(
-                    icon: const Icon(Icons.arrow_back_ios), // flèche vers la gauche
-                    color: Color(0xFFE61580), // rose
-                    iconSize: 30,
-                    onPressed: () {
-                      Navigator.pop(context); // revenir à la page précédente
-                    },
-                  ),
-                ),
-
-
-
-
-
-
-
-
-
-
               ],
             ),
           ),
