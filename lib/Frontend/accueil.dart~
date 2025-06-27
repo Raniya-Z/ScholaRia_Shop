@@ -15,29 +15,41 @@ class _PageAccueilState extends State<PageAccueil> {
   int _selectedIndex = 0;
 
   final Color rose = const Color(0xFFE61580);
+  final Color gris = Colors.grey.shade200;
+  final Color grisClair = const Color(0xFFFAFAFA);
+  final Color grisTexte = Colors.grey.shade600;
 
   final String nomUtilisateur = "Nom Utilisateur";
   final String nomEntreprise = "Nom Entreprise";
 
   // Widget personnalisé pour la page Accueil
-  Widget _pageAccueil(Color backgroundColor, Color iconColor, Color textColor) {
+  Widget _pageAccueil() {
     return Container(
-      color: backgroundColor,
+      color: grisClair,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.add_shopping_cart_outlined, size: 40, color: iconColor),
+            Icon(Icons.add_shopping_cart_outlined, size: 40, color: Colors.grey.shade500),
             const SizedBox(height: 12),
             Text(
               'Ajoutez des produits à votre liste.',
-              style: TextStyle(color: textColor, fontSize: 12),
+              style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
             ),
           ],
         ),
       ),
     );
   }
+
+  // Liste des pages affichées selon l'index sélectionné
+  late final List<Widget> _pages = [
+    _pageAccueil(),
+    const PageFavoris(),
+    const PagePanier(),
+    const PageNotifications(),
+    PageCompte(nomUtilisateur: nomUtilisateur, nomEntreprise: nomEntreprise),
+  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -47,20 +59,6 @@ class _PageAccueilState extends State<PageAccueil> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final Color grisClair = isDark ? const Color(0xFF121212) : const Color(0xFFFAFAFA);
-    final Color gris = isDark ? const Color(0xFF1E1E1E) : Colors.grey.shade200;
-    final Color grisTexte = isDark ? Colors.white70 : Colors.grey.shade600;
-    final Color iconTextColor = isDark ? Colors.grey.shade400 : Colors.grey.shade500;
-
-    final List<Widget> _pages = [
-      _pageAccueil(grisClair, iconTextColor, iconTextColor),
-      const PageFavoris(),
-      const PagePanier(),
-      const PageNotifications(),
-      PageCompte(nomUtilisateur: nomUtilisateur, nomEntreprise: nomEntreprise),
-    ];
-
     return Scaffold(
       backgroundColor: grisClair,
 
@@ -79,7 +77,7 @@ class _PageAccueilState extends State<PageAccueil> {
                 Padding(
                   padding: const EdgeInsets.only(top: 10),
                   child: Image.asset(
-                    isDark ? 'assets/logo1_sombre.png' : 'assets/logo2.png',
+                    'assets/logo2.png',
                     width: 105,
                     height: 105,
                   ),
@@ -95,12 +93,12 @@ class _PageAccueilState extends State<PageAccueil> {
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Row(
                       children: [
-                        Icon(Icons.search, color: iconTextColor),
+                        Icon(Icons.search, color: Colors.grey.shade500),
                         const SizedBox(width: 6),
                         Text(
                           'Recherche',
                           style: TextStyle(
-                            color: iconTextColor,
+                            color: Colors.grey.shade500,
                             fontSize: 14,
                           ),
                         ),
@@ -120,7 +118,7 @@ class _PageAccueilState extends State<PageAccueil> {
           ),
         ),
       )
-          : null,
+          : null, // Pas d'AppBar sur la page Compte
 
       // Affiche la page sélectionnée
       body: Stack(
@@ -136,7 +134,7 @@ class _PageAccueilState extends State<PageAccueil> {
             left: 20,
             child: FloatingActionButton(
               mini: true,
-              backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+              backgroundColor: Colors.white,
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -148,10 +146,10 @@ class _PageAccueilState extends State<PageAccueil> {
 
       // BottomNavigationBar
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+        backgroundColor: Colors.white,
         currentIndex: _selectedIndex,
         selectedItemColor: rose,
-        unselectedItemColor: grisTexte,
+        unselectedItemColor: Colors.grey.shade700,
         type: BottomNavigationBarType.fixed,
         onTap: _onItemTapped,
         items: const [

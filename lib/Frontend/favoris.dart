@@ -7,17 +7,21 @@ class PageFavoris extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final Color backgroundColor = isDark ? const Color(0xFF121212) : grisClair;
+    final Color iconTextColor = isDark ? Colors.grey.shade400 : Colors.grey.shade500;
+
     return Container(
-      color: grisClair,
+      color: backgroundColor,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.favorite_border, size: 40, color: Colors.grey.shade500),
+            Icon(Icons.favorite_border, size: 40, color: iconTextColor),
             const SizedBox(height: 12),
             Text(
               'Ajoutez des produits à vos favoris.',
-              style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
+              style: TextStyle(color: iconTextColor, fontSize: 12),
             ),
           ],
         ),

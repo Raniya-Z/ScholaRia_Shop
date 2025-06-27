@@ -123,7 +123,7 @@ class _CompteUtilisateurPageState extends State<CompteUtilisateurPage> {
                       margin: const EdgeInsets.symmetric(vertical: 6),
                       padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
                       decoration: BoxDecoration(
-                        color: selectedIndex == index ? rose.withOpacity(0.04) : cardColor,
+                        color: selectedIndex == index ? rose.withOpacity(0) : cardColor,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
                           color: selectedIndex == index ? rose : borderColor,

@@ -66,11 +66,12 @@ class _FirstPageState extends State<FirstPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      backgroundColor: const Color(0xFFE61580),
+      backgroundColor: isDark ? const Color(0xFF121212) : const Color(0xFFE61580),
       body: Center(
         child: Image.asset(
-          'assets/logo.png',
+          isDark ? 'assets/logo1_sombre.png' : 'assets/logo.png',
           width: 300,
           height: 300,
         ),

@@ -82,7 +82,7 @@ class _PageCompteState extends State<PageCompte> {
               padding: const EdgeInsets.symmetric(vertical: 16),
               alignment: Alignment.center,
               child: Image.asset(
-                isDark ? 'assets/logo1_sombre.png' : 'assets/logo2.png',
+                'assets/logo2.png',
                 width: 250,
                 height: 250,
                 fit: BoxFit.contain,
