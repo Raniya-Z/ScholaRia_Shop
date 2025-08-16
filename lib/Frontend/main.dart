@@ -1,14 +1,22 @@
 import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scholaria_shop_v1/Frontend/page_splash1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:scholaria_shop_v1/Frontend/theme_provider.dart';
+import '../backend/Services_Firbase/firebase_options.dart';
 import 'Frontend/page_splash1.dart';
 import 'Frontend/compte_utilisateur.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); //line 1 db
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(
     ChangeNotifierProvider(
       create: (_) => ThemeProvider(),

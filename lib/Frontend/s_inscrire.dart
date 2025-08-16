@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:scholaria_shop_v1/Frontend/accueil.dart';
 import 'package:scholaria_shop_v1/Frontend/se_connecter.dart';
+import '../backend/Services_Firbase/auth_service.dart';
 
 class PageInscription extends StatefulWidget {
   const PageInscription({super.key});
@@ -38,6 +41,10 @@ class _PageInscriptionState extends State<PageInscription> {
   late FocusNode focusEmail;
   late FocusNode focusMotDePasse;
   late FocusNode focusConfirmation;
+
+  final AuthService _authService = AuthService();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
 
   @override
@@ -90,6 +97,47 @@ class _PageInscriptionState extends State<PageInscription> {
     focusConfirmation.dispose();
     super.dispose();
   }
+// Fonction pour gérer l'inscription
+  Future<void> SinscrireSignUp(BuildContext context) async {
+    if (!_formKey.currentState!.validate()) return;
+
+    _formKey.currentState!.save();
+
+    try {
+      final user = await _authService.signUpWithName(
+        nomComplet,
+        email,
+        motDePasse,
+      );
+
+      if (user != null && user.uid.isNotEmpty) {
+        // Afficher le vrai nom de l'utilisateur
+        final displayName = user.displayName ?? nomComplet;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Bienvenue, $displayName !')),
+        );
+
+        // Aller vers la page Home
+        Navigator.pushReplacementNamed(context, '/home');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Échec de l'inscription")),
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Erreur Firebase: ${e.message}")),
+      );
+      print("Erreur Firebase complète: $e");
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Erreur inattendue: $e")),
+      );
+      print("Erreur complète: $e");
+    }
+  }
+
 
 
   @override
@@ -391,6 +439,8 @@ class _PageInscriptionState extends State<PageInscription> {
     return null;
     },
     ),
+
+
     if (cadreVertValideMotDePasse)
     Padding(
     padding: const EdgeInsets.only(top: 4, right: 12),
@@ -514,14 +564,10 @@ class _PageInscriptionState extends State<PageInscription> {
               borderRadius: BorderRadius.circular(8),
             ),
           ),
-          onPressed: () {
-            if (_formKey.currentState!.validate()) {
-              _formKey.currentState!.save();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Bienvenue, $nomComplet !')),
-              );
-            }
-          },
+
+    onPressed: ()=>SinscrireSignUp(context),
+
+
           child: const Text(
             'S’inscrire',
             style: TextStyle(fontSize: 16, color: Colors.white),
